@@ -88,13 +88,11 @@ sub go_back() {
 
 # Redraw the window with the contents of the new directory.
 sub change_dir($) {
-    return unless (-d "$_[0]");
-
     my $dir       = abs_path("$_[0]");
     my @file_list = list_files("$dir");
     return unless @file_list;
 
-    $cwd = $dir;
+    $cwd   = $dir;
     @files = @file_list;
 
     $files1->{-ypos} = 0;
