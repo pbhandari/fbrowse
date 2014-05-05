@@ -32,11 +32,9 @@ my $pane2 = $cui->add(
 my $files1 = $pane1->add("filelist", "Listbox",
     -values   => \@files,
     -onchange => sub {
-        change_dir("$cwd/" . substr($_[0]->get(), 0, -1))
+        change_dir("$cwd/" . substr($_[0]->get(), 0, -1));
     },
 );
-
-
 
 # Show the files in the given directory, it automatically post-fixes a '/'
 # next to a directory entry and a '@' next to a link entry.
@@ -45,7 +43,6 @@ my $files1 = $pane1->add("filelist", "Listbox",
 sub list_files($) {
     my $dir = abs_path($_[0]);
 
-    # TODO: don't die handle this properly
     opendir(DIR, $dir) or return ();
 
     my @file_list = ();
@@ -90,7 +87,7 @@ sub go_back() {
 sub change_dir($) {
     my $dir       = abs_path("$_[0]");
     my @file_list = list_files("$dir");
-    return unless @file_list;
+    return unless @file_list; # will only be empty if I can't cd there.
 
     $cwd   = $dir;
     @files = @file_list;
@@ -103,6 +100,7 @@ sub change_dir($) {
 sub toggle_hidden() {
     $show_hidden = !$show_hidden;
     @files = list_files("$cwd");
+
     redraw();
 }
 
@@ -128,4 +126,3 @@ $cui->set_binding(sub { toggle_hidden() },  "H");
 
 $files1->focus();
 $cui->mainloop();
-
