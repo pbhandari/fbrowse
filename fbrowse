@@ -43,10 +43,12 @@ my $files1 = $pane1->add("filelist", "Listbox",
 #
 # TODO: use colours
 sub list_files($) {
-    @files = ();
     my $dir = abs_path($_[0]);
-    opendir(DIR, $dir) or die $!;
 
+    # TODO: don't die handle this properly
+    opendir(DIR, $dir) or return ();
+
+    @files = ();
     while (my $file = readdir(DIR)) {
         # Don't add ./ and ../
         next if ($file =~ m/^\.(\.)?$/);
@@ -88,9 +90,13 @@ sub go_back() {
 sub change_dir($) {
     return unless (-d "$_[0]");
 
-    $cwd = abs_path("$_[0]");
+    my $dir       = abs_path("$_[0]");
+    my @file_list = list_files("$dir");
+    return unless @file_list;
 
-    @files = list_files("$cwd");
+    $cwd = $dir;
+    @files = @file_list;
+
     redraw();
 }
 
