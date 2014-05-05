@@ -72,7 +72,7 @@ sub list_files($) {
 }
 
 # Move back in the directory tree
-#
+# TODO:
 # Currently, if you follow a link into a directory, and then move back, you
 # are in a different directory then when you started, the intention behind this
 # function is to mitigate that and fix the behaviour such that going back from
@@ -80,11 +80,16 @@ sub list_files($) {
 # not the parent directory of the link's target.
 sub go_back() {
     return if $cwd =~ m/^\/$/; # no-op if at root
+
+    # Most-likely fix is instead of a $cwd/.. , I remove the last /*
+    # from $cwd.
     change_dir("$cwd/..")
 }
 
 # Redraw the window with the contents of the new directory.
 sub change_dir($) {
+
+    # TODO: Don't do abs_path here.
     my $dir       = abs_path("$_[0]");
     my @file_list = list_files("$dir");
     return unless @file_list; # will only be empty if I can't cd there.
