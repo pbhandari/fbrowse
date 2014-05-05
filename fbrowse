@@ -97,6 +97,7 @@ sub change_dir($) {
     $cwd = $dir;
     @files = @file_list;
 
+    $files1->{-ypos} = 0;
     redraw();
 }
 
