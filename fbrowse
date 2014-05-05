@@ -48,7 +48,7 @@ sub list_files($) {
     # TODO: don't die handle this properly
     opendir(DIR, $dir) or return ();
 
-    @files = ();
+    my @file_list = ();
     while (my $file = readdir(DIR)) {
         # Don't add ./ and ../
         next if ($file =~ m/^\.(\.)?$/);
@@ -63,15 +63,15 @@ sub list_files($) {
         elsif (-x "$dir/$file") { $file = "$file*"; }
         else                    { $file = "$file "; }
 
-        push(@files, $file);
+        push(@file_list, $file);
     }
 
     # XXX: There has to be a way to force Perl to loop in order
-    @files = sort @files;
+    @file_list = sort @file_list;
 
-    unshift @files, "../"  unless $cwd =~ /^\/$/;
+    unshift @file_list, "../"  unless $dir =~ m/^\/$/;
 
-    return @files;
+    return @file_list;
 }
 
 # Move back in the directory tree
